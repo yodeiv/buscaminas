@@ -1,15 +1,19 @@
-import React, { useState } from "react";
-import { minesArr, otherf, a } from "./utils";
-
+import React, { useState, useRef } from "react";
+//import { minesArr, otherf, a } from "./utils";
+import matrix from "./utils2";
+let counter = new Set();
 function Mines() {
   const [mines, setMines] = useState(
     Array.from(Array(9), () => {
       return new Array(9).fill("");
     })
   );
-
+  const [obj, setObj] = useState(matrix(9));
+  //const obj = matrix(9);
   const [cover, setCover] = useState("0px");
-  //console.log(mines);
+  const [win, setWin] = useState(false);
+  let minesArr = obj.applyValues;
+  //const minesArr = applyValues();
   const handleRightClick = (e) => {
     let v = e.target.id.split(",").map((z) => parseInt(z));
     if (e.target.innerText === "") {
@@ -26,11 +30,15 @@ function Mines() {
   };
   const handleClick = (e) => {
     let v = e.target.id.split(",").map((z) => parseInt(z));
+
     if (minesArr[v[0]][v[1]] === 0) {
       let allCoor = [];
       let initial = [{ i: v[0], j: v[1] }];
       //otherf({ initial, allCoor });
-      let t = otherf({ initial, allCoor }).allCoor;
+      let t = obj.otherf({ initial, allCoor }).allCoor;
+      //counter = counter + t.length;
+      t.map((item) => `${item.i},${item.j}`).forEach(counter.add, counter);
+      if (counter.size >= 71) setWin(true);
       setMines((prev) => {
         t.map((item) => {
           prev[item.i][item.j] = minesArr[item.i][item.j].toString();
@@ -42,10 +50,12 @@ function Mines() {
         prev[v[0]][v[1]] = minesArr[v[0]][v[1]].toString();
         return [...prev];
       });
+      counter.add(`${v[0]},${v[1]}`);
+      if (counter.size >= 71) setWin(true);
     } else {
       setCover("225px");
       setMines((prev) => {
-        a.map((item) => {
+        obj.coordinatesBombs.map((item) => {
           prev[item.i][item.j] = "b";
         });
         return [...prev];
@@ -54,7 +64,7 @@ function Mines() {
   };
   return (
     <div>
-      {/* <div>
+      <div>
         {minesArr.map((_, i) => {
           return (
             <div>
@@ -68,7 +78,21 @@ function Mines() {
             </div>
           );
         })}
-      </div> */}
+      </div>
+      <button
+        onClick={() => {
+          setObj(matrix(9));
+          setMines(
+            Array.from(Array(9), () => {
+              return new Array(9).fill("");
+            })
+          );
+          setCover("0px");
+          setWin(false);
+        }}
+      >
+        Change {win ? "you win" : null}
+      </button>
 
       <div style={{ position: "relative" }}>
         <div
