@@ -46,6 +46,28 @@ function matrix(dimention, startingCoor = []) {
     return f;
   }
 
+  function emptySurroundings({ initial, allCoor }) {
+    let zeros = [];
+    let temp = [];
+    initial.forEach((element) => {
+      [element, ...surroundingSingleCoo(element)].forEach((element) => {
+        if (temp.some((item) => item.i === element.i && item.j === element.j) === false) {
+          temp.push(element);
+        }
+      });
+    });
+
+    temp.forEach((element) => {
+      if (allCoor.some((item) => item.i === element.i && item.j === element.j) === false) {
+        allCoor.push(element);
+        if (applyValues[element.i][element.j] === 0) {
+          zeros.push(element);
+        }
+      }
+    });
+    return { initial: zeros, allCoor: allCoor };
+  }
+
   let applyValues = (() => {
     let b = surroundingCoor(coordinatesBombs);
     for (let index = 0; index < coordinatesBombs.length; index++) {
@@ -61,30 +83,10 @@ function matrix(dimention, startingCoor = []) {
 
   return {
     dimention,
-    emptySurroundings({ initial, allCoor }) {
-      let zeros = [];
-      let temp = [];
-      initial.forEach((element) => {
-        [element, ...surroundingSingleCoo(element)].forEach((element) => {
-          if (temp.some((item) => item.i === element.i && item.j === element.j) === false) {
-            temp.push(element);
-          }
-        });
-      });
 
-      temp.forEach((element) => {
-        if (allCoor.some((item) => item.i === element.i && item.j === element.j) === false) {
-          allCoor.push(element);
-          if (applyValues[element.i][element.j] === 0) {
-            zeros.push(element);
-          }
-        }
-      });
-      return { initial: zeros, allCoor: allCoor };
-    },
-    otherf(obj) {
+    recursive(obj) {
       while (obj.initial.length !== 0) {
-        obj = this.emptySurroundings(obj);
+        obj = emptySurroundings(obj);
       }
       return obj;
     },

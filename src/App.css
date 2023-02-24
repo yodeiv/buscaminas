@@ -1,3 +1,74 @@
 .App {
   text-align: center;
 }
+.grid-container {
+  margin: auto;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(9, 30px);
+  grid-auto-rows: 30px;
+  grid-gap: 0;
+}
+
+.closed {
+  background-image: url("../src/images/closed.svg");
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+}
+.mine {
+  background-image: url("../src/images/mine.svg");
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+}
+.flag {
+  background-image: url("../src/images/flag.svg");
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+}
+.type0 {
+  background-image: url("../src/images/type0.svg");
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+}
+.type1 {
+  background-image: url("../src/images/type1.svg");
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+}
+.type2 {
+  background-image: url("../src/images/type2.svg");
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+}
+.type3 {
+  background-image: url("../src/images/type3.svg");
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+}
+.type4 {
+  background-image: url("../src/images/type4.svg");
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+}
+/*Face button*/
+.face_unpressed {
+  background-image: url("../src/images/face_unpressed.svg");
+  background-size: 50px 50px;
+}
+.face_lose {
+  background-image: url("../src/images/face_lose.svg");
+  background-size: 50px 50px;
+}
+.face_win {
+  background-image: url("../src/images/face_win.svg");
+  background-size: 50px 50px;
+}
+/*mines*/
+.mine_red {
+  background-image: url("../src/images/mine_red.svg");
+  background-size: 30px 30px;
+}
+.mine_wrong {
+  background-image: url("../src/images/mine_wrong.svg");
+  background-size: 30px 30px;
+}
