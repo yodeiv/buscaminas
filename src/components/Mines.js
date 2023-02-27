@@ -1,9 +1,10 @@
 import React, { useState, useRef } from "react";
 import Tile from "./Tile";
-import matrix from "./utils2";
-
+import matrix from "./utils";
+import CounterFlags from "./CounterFlags";
+import Counter from "./Counter";
 function Mines() {
-  const counter = useRef(new Set());
+  const clickCounter = useRef(new Set());
   const [mines, setMines] = useState(
     Array.from(Array(9), () => {
       return new Array(9).fill("");
@@ -12,12 +13,49 @@ function Mines() {
 
   const obj = useRef(matrix(9));
   const [cover, setCover] = useState("0px");
-  const [win, setWin] = useState(2);
+  const [win, setWin] = useState("face_neutral");
   const [countFlags, setCountFlags] = useState(new Set());
+  const [startCounter, setStartCounter] = useState(0);
+
+  const handleReset = () => {
+    //Do not reset if the game hasn't been started
+    if (clickCounter.current.size === 0 && countFlags.size === 0) return;
+
+    obj.current = matrix(9);
+    setMines(
+      Array.from(Array(9), () => {
+        return new Array(9).fill("");
+      })
+    );
+    setCover("0px");
+    setWin("face_neutral");
+    setCountFlags((prev) => {
+      prev.clear();
+      return prev;
+    });
+    clickCounter.current.clear();
+    setStartCounter(0);
+  };
+
+  const checkWin = (clicks) => {
+    if (clicks >= 71) {
+      //Fill the number of flags up to 10 with 0,1...,9
+      setCountFlags(new Set(Array.from(Array(10).keys())));
+      setStartCounter("paused");
+      setWin("face_win");
+      setMines((prev) => {
+        obj.current.coordinatesBombs.forEach((item) => {
+          prev[item.i][item.j] = "f";
+        });
+        return [...prev];
+      });
+    }
+  };
 
   const handleRightClick = (e) => {
+    e.preventDefault();
     const v = e.target.id.split(",").map((z) => parseInt(z));
-    if (e.target.className === "closed") {
+    if (e.target.className === "closed tile") {
       setMines((prev) => {
         prev[v[0]][v[1]] = "f";
         return [...prev];
@@ -39,24 +77,20 @@ function Mines() {
   };
   const handleClick = (e) => {
     const v = e.target.id.split(",").map((z) => parseInt(z));
-    //After the first click generate the matrix
-    if (!counter.current.size) obj.current = matrix(9, v);
-
+    //Wait for the first click, after of which the matrix get gerenated
+    if (!clickCounter.current.size) {
+      obj.current = matrix(9, v);
+      setStartCounter("started");
+    }
+    //If the click is on an empty space
     if (obj.current.applyValues[v[0]][v[1]] === 0) {
       const allCoor = [];
       const initial = [{ i: v[0], j: v[1] }];
       const t = obj.current.recursive({ initial, allCoor }).allCoor;
       const stringForm = t.map((item) => `${item.i},${item.j}`);
-      stringForm.forEach(counter.current.add, counter.current);
-      if (counter.current.size >= 71) {
-        setWin(0);
-        setMines((prev) => {
-          obj.current.coordinatesBombs.map((item) => {
-            prev[item.i][item.j] = "f";
-          });
-          return [...prev];
-        });
-      }
+      stringForm.forEach(clickCounter.current.add, clickCounter.current);
+      //checkWin function checks if the player won based on the number of clicks
+      checkWin(clickCounter.current.size);
       setCountFlags((prev) => {
         stringForm.forEach((element) => {
           prev.delete(element);
@@ -64,31 +98,27 @@ function Mines() {
         return prev;
       });
       setMines((prev) => {
-        t.map((item) => {
+        t.forEach((item) => {
           prev[item.i][item.j] = obj.current.applyValues[item.i][item.j].toString();
         });
         return [...prev];
       });
+      //If the click is on an number
     } else if (obj.current.applyValues[v[0]][v[1]] >= 1) {
       setMines((prev) => {
         prev[v[0]][v[1]] = obj.current.applyValues[v[0]][v[1]].toString();
         return [...prev];
       });
-      counter.current.add(`${v[0]},${v[1]}`);
-      if (counter.current.size >= 71) {
-        setWin(0);
-        setMines((prev) => {
-          obj.current.coordinatesBombs.map((item) => {
-            prev[item.i][item.j] = "f";
-          });
-          return [...prev];
-        });
-      }
+      clickCounter.current.add(`${v[0]},${v[1]}`);
+      //checkWin function checks if the player won based on the number of clicks
+      checkWin(clickCounter.current.size);
+      //If the click is on a mine
     } else {
+      setStartCounter("paused");
       setCover("225px");
-      setWin(1);
+      setWin("face_lose");
       setMines((prev) => {
-        obj.current.coordinatesBombs.map((item) => {
+        obj.current.coordinatesBombs.forEach((item) => {
           if (prev[item.i][item.j] !== "f") prev[item.i][item.j] = "b";
         });
         prev[v[0]][v[1]] = "mr"; //mine red
@@ -111,10 +141,10 @@ function Mines() {
       <div>
         {obj.current.applyValues.map((_, i) => {
           return (
-            <div>
+            <div key={i}>
               {_.map((_, j) => {
                 return (
-                  <button id={`${i},${j}`} onClick={handleClick}>
+                  <button id={`${i},${j}`} onClick={handleClick} key={`${i},${j}`}>
                     {_}
                   </button>
                 );
@@ -123,61 +153,36 @@ function Mines() {
           );
         })}
       </div>
-      <div>
-        {
-          (() => {
-            if (win === 0) return 0;
-            return 10 - countFlags.size;
-          })()
-          /* 10 - countFlags.size */
-        }
-      </div>
-      <div
-        onClick={() => {
-          obj.current = matrix(9);
-          setMines(
-            Array.from(Array(9), () => {
-              return new Array(9).fill("");
-            })
-          );
-          setCover("0px");
-          setWin(2);
-          setCountFlags(new Set());
-          counter.current.clear();
-        }}
-        className={(() => {
-          switch (win) {
-            case 0:
-              return "face_win";
-            case 1:
-              return "face_lose";
-            default:
-              return "face_unpressed";
-          }
-        })()}
-        style={{ width: "50px", height: "50px", margin: "auto" }}
-      ></div>
+
+      <CounterFlags numberFlags={countFlags.size} />
+      <Counter start={startCounter} />
+      <div onClick={handleReset} className={win} style={{ width: "50px", height: "50px", margin: "auto" }}></div>
 
       <div style={{ position: "relative" }}>
         <div
+          className="cover"
           style={{
-            display: "inline-block",
             width: cover,
             height: cover,
-            backgroundColor: "green",
-            position: "absolute",
-            left: "70px",
-            opacity: "0.5",
           }}
         ></div>
         <div className="grid-container">
           {mines.map((_, i) => {
             return (
-              <>
+              <React.Fragment key={i}>
                 {_.map((c, j) => {
-                  return <Tile c={c} i={i} j={j} handleClick={handleClick} handleRightClick={handleRightClick} />;
+                  return (
+                    <Tile
+                      c={c}
+                      i={i}
+                      j={j}
+                      handleClick={handleClick}
+                      handleRightClick={handleRightClick}
+                      key={`${i},${j}`}
+                    />
+                  );
                 })}
-              </>
+              </React.Fragment>
             );
           })}
         </div>

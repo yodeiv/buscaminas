@@ -4,55 +4,52 @@
 .grid-container {
   margin: auto;
   display: grid;
-  justify-content: center;
+  justify-content: center; /*justify-items: center*/
   grid-template-columns: repeat(9, 30px);
   grid-auto-rows: 30px;
   grid-gap: 0;
 }
+.cover {
+  display: inline-block;
+  background-color: green;
+  position: absolute;
+  left: 70px;
+  opacity: 0.5;
+}
+
+.tile {
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+}
 
 .closed {
   background-image: url("../src/images/closed.svg");
-  background-size: 30px 30px;
-  background-repeat: no-repeat;
 }
 .mine {
   background-image: url("../src/images/mine.svg");
-  background-size: 30px 30px;
-  background-repeat: no-repeat;
 }
 .flag {
   background-image: url("../src/images/flag.svg");
-  background-size: 30px 30px;
-  background-repeat: no-repeat;
 }
 .type0 {
   background-image: url("../src/images/type0.svg");
-  background-size: 30px 30px;
-  background-repeat: no-repeat;
 }
 .type1 {
   background-image: url("../src/images/type1.svg");
-  background-size: 30px 30px;
-  background-repeat: no-repeat;
 }
 .type2 {
   background-image: url("../src/images/type2.svg");
-  background-size: 30px 30px;
-  background-repeat: no-repeat;
 }
 .type3 {
   background-image: url("../src/images/type3.svg");
-  background-size: 30px 30px;
-  background-repeat: no-repeat;
 }
 .type4 {
   background-image: url("../src/images/type4.svg");
-  background-size: 30px 30px;
-  background-repeat: no-repeat;
 }
 /*Face button*/
-.face_unpressed {
-  background-image: url("../src/images/face_unpressed.svg");
+
+.face_neutral {
+  background-image: url("../src/images/face_neutral.svg");
   background-size: 50px 50px;
 }
 .face_lose {
@@ -71,4 +68,46 @@
 .mine_wrong {
   background-image: url("../src/images/mine_wrong.svg");
   background-size: 30px 30px;
+}
+
+/*Digits*/
+.digit {
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-size: 20px 30px;
+  width: 20px;
+  height: 30px;
+}
+.d0 {
+  background-image: url("../src/images/d0.svg");
+}
+.d1 {
+  background-image: url("../src/images/d1.svg");
+}
+.d2 {
+  background-image: url("../src/images/d2.svg");
+}
+.d3 {
+  background-image: url("../src/images/d3.svg");
+}
+.d4 {
+  background-image: url("../src/images/d4.svg");
+}
+.d5 {
+  background-image: url("../src/images/d5.svg");
+}
+.d6 {
+  background-image: url("../src/images/d6.svg");
+}
+.d7 {
+  background-image: url("../src/images/d7.svg");
+}
+.d8 {
+  background-image: url("../src/images/d8.svg");
+}
+.d9 {
+  background-image: url("../src/images/d9.svg");
+}
+.d- {
+  background-image: url("../src/images/d-.svg");
 }
