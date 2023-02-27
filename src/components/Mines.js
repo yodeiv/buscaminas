@@ -11,7 +11,7 @@ function Mines() {
     })
   );
 
-  const obj = useRef(matrix(9));
+  const obj = useRef();
   const [cover, setCover] = useState("0px");
   const [win, setWin] = useState("face_neutral");
   const [countFlags, setCountFlags] = useState(new Set());
@@ -37,19 +37,17 @@ function Mines() {
     setStartCounter(0);
   };
 
-  const checkWin = (clicks) => {
-    if (clicks >= 71) {
-      //Fill the number of flags up to 10 with 0,1...,9
-      setCountFlags(new Set(Array.from(Array(10).keys())));
-      setStartCounter("paused");
-      setWin("face_win");
-      setMines((prev) => {
-        obj.current.coordinatesBombs.forEach((item) => {
-          prev[item.i][item.j] = "f";
-        });
-        return [...prev];
+  const checkWin = () => {
+    //Fill the number of flags up to 10 with 0,1...,9
+    setCountFlags(new Set(Array.from(Array(10).keys())));
+    setStartCounter("paused");
+    setWin("face_win");
+    setMines((prev) => {
+      obj.current.coordinatesBombs.forEach((item) => {
+        prev[item.i][item.j] = "f";
       });
-    }
+      return [...prev];
+    });
   };
 
   const handleRightClick = (e) => {
@@ -89,8 +87,8 @@ function Mines() {
       const t = obj.current.recursive({ initial, allCoor }).allCoor;
       const stringForm = t.map((item) => `${item.i},${item.j}`);
       stringForm.forEach(clickCounter.current.add, clickCounter.current);
-      //checkWin function checks if the player won based on the number of clicks
-      checkWin(clickCounter.current.size);
+      //Checks if the player won based on the number of clicks
+      if (clickCounter.current.size >= 71) checkWin();
       setCountFlags((prev) => {
         stringForm.forEach((element) => {
           prev.delete(element);
@@ -110,8 +108,8 @@ function Mines() {
         return [...prev];
       });
       clickCounter.current.add(`${v[0]},${v[1]}`);
-      //checkWin function checks if the player won based on the number of clicks
-      checkWin(clickCounter.current.size);
+      //Checks if the player won based on the number of clicks
+      if (clickCounter.current.size >= 71) checkWin();
       //If the click is on a mine
     } else {
       setStartCounter("paused");
@@ -138,22 +136,6 @@ function Mines() {
 
   return (
     <div>
-      <div>
-        {obj.current.applyValues.map((_, i) => {
-          return (
-            <div key={i}>
-              {_.map((_, j) => {
-                return (
-                  <button id={`${i},${j}`} onClick={handleClick} key={`${i},${j}`}>
-                    {_}
-                  </button>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
-
       <CounterFlags numberFlags={countFlags.size} />
       <Counter start={startCounter} />
       <div onClick={handleReset} className={win} style={{ width: "50px", height: "50px", margin: "auto" }}></div>

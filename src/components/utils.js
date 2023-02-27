@@ -100,3 +100,13 @@ function matrix(dimention, startingCoor = []) {
 }
 
 export default matrix;
+
+export const formatNumber = (n) => {
+  //convert from -3 to ["0", "-", "3"]
+  const str = n.toString().split("").reverse();
+  const fill = ["0", "0", "0"];
+  str.forEach((item, key) => {
+    fill[key] = item;
+  });
+  return fill.reverse();
+};

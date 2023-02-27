@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
+import { formatNumber } from "./utils";
 
 function Counter({ start }) {
   //Posible values of "start": 0, "started", "paused"
   const [time, setTime] = useState(0);
   const timer = useRef();
+
   useEffect(() => {
     if (start === "started") {
       timer.current = setInterval(() => {
@@ -21,23 +23,11 @@ function Counter({ start }) {
     };
   }, [time, start]);
 
-  const formatNumber = (n) => {
-    const str = n.toString().split("").reverse();
-    const fill = ["0", "0", "0"];
-    str.forEach((item, key) => {
-      fill[key] = item;
-    });
-    return fill.reverse();
-  };
-
   return (
     <div>
-      <div>
-        {formatNumber(time).map((item, index) => {
-          return <div className={`d${item} digit`} key={index}></div>;
-        })}
-      </div>
-      {time}
+      {formatNumber(time).map((item, index) => {
+        return <div className={`d${item} digit`} key={index}></div>;
+      })}
     </div>
   );
 }
