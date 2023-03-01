@@ -10,13 +10,12 @@
   grid-gap: 0;
 }
 .cover {
-  display: inline-block;
   background-color: green;
   position: absolute;
-  left: 70px;
+  margin: auto;
   opacity: 0.5;
 }
-
+/*Tiles*/
 .tile {
   background-size: 30px 30px;
   background-repeat: no-repeat;
@@ -46,19 +45,32 @@
 .type4 {
   background-image: url("../src/images/type4.svg");
 }
+.type5 {
+  background-image: url("../src/images/type5.svg");
+}
+.type6 {
+  background-image: url("../src/images/type6.svg");
+}
+.type7 {
+  background-image: url("../src/images/type7.svg");
+}
+.type8 {
+  background-image: url("../src/images/type8.svg");
+}
 /*Face button*/
+.face {
+  background-size: 50px 50px;
+  background-repeat: no-repeat;
+}
 
 .face_neutral {
   background-image: url("../src/images/face_neutral.svg");
-  background-size: 50px 50px;
 }
 .face_lose {
   background-image: url("../src/images/face_lose.svg");
-  background-size: 50px 50px;
 }
 .face_win {
   background-image: url("../src/images/face_win.svg");
-  background-size: 50px 50px;
 }
 /*mines*/
 .mine_red {
