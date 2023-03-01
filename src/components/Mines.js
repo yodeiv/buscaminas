@@ -4,10 +4,12 @@ import matrix from "./utils";
 import CounterFlags from "./CounterFlags";
 import Counter from "./Counter";
 function Mines() {
+  //initial object passed to "setting" correspond to beginner level
+  const [setting, setSetting] = useState({ dimension: [9, 9], startingCoor: [], numberOfMines: 10 });
   const clickCounter = useRef(new Set());
   const [mines, setMines] = useState(
-    Array.from(Array(9), () => {
-      return new Array(9).fill("");
+    Array.from(Array(setting.dimension[0]), () => {
+      return new Array(setting.dimension[1]).fill("");
     })
   );
 
@@ -21,10 +23,10 @@ function Mines() {
     //Do not reset if the game hasn't been started
     if (clickCounter.current.size === 0 && countFlags.size === 0) return;
 
-    obj.current = matrix([9, 9]);
+    //obj.current = matrix();
     setMines(
-      Array.from(Array(9), () => {
-        return new Array(9).fill("");
+      Array.from(Array(setting.dimension[0]), () => {
+        return new Array(setting.dimension[1]).fill("");
       })
     );
     setCover("0px");
@@ -38,8 +40,8 @@ function Mines() {
   };
 
   const endWin = () => {
-    //Fill the number of flags up to 10 with 0,1...,9
-    setCountFlags(new Set(Array.from(Array(10).keys())));
+    //Fill the number of flags up to 10 with 0,1...,9 when the number of mines is 10
+    setCountFlags(new Set(Array.from(Array(setting.numberOfMines).keys())));
     setStartCounter("paused");
     setWin("face_win");
     setMines((prev) => {
@@ -77,7 +79,7 @@ function Mines() {
     const v = e.target.id.split(",").map((z) => parseInt(z));
     //Wait for the first click, after of which the matrix get gerenated
     if (!clickCounter.current.size) {
-      obj.current = matrix([9, 9], v);
+      obj.current = matrix(setting.dimension, v, setting.numberOfMines);
       setStartCounter("started");
     }
     //If the click is on an empty space
@@ -88,7 +90,7 @@ function Mines() {
       const stringForm = t.map((item) => `${item.i},${item.j}`);
       stringForm.forEach(clickCounter.current.add, clickCounter.current);
       //Checks if the player won based on the number of clicks
-      if (clickCounter.current.size >= 71) endWin();
+      if (clickCounter.current.size >= setting.dimension[0] * setting.dimension[1] - setting.numberOfMines) endWin();
       setCountFlags((prev) => {
         stringForm.forEach((element) => {
           prev.delete(element);
@@ -109,7 +111,7 @@ function Mines() {
       });
       clickCounter.current.add(`${v[0]},${v[1]}`);
       //Checks if the player won based on the number of clicks
-      if (clickCounter.current.size >= 71) endWin();
+      if (clickCounter.current.size >= setting.dimension[0] * setting.dimension[1] - setting.numberOfMines) endWin();
       //If the click is on a mine
     } else {
       setStartCounter("paused");
@@ -136,7 +138,7 @@ function Mines() {
 
   return (
     <div>
-      <CounterFlags numberFlags={countFlags.size} />
+      <CounterFlags numberFlags={setting.numberOfMines - countFlags.size} />
       <div
         onClick={handleReset}
         className={`${win} face`}
@@ -150,25 +152,23 @@ function Mines() {
           height: cover,
         }}
       ></div>
-      <div>
-        <div className="grid-container">
-          {mines.map((_, i) => {
-            return (
-              <React.Fragment key={i}>
-                {_.map((c, j) => {
-                  return (
-                    <Tile
-                      cij={{ c, i, j }}
-                      handleClick={handleClick}
-                      handleRightClick={handleRightClick}
-                      key={`${i},${j}`}
-                    />
-                  );
-                })}
-              </React.Fragment>
-            );
-          })}
-        </div>
+      <div className="grid-container">
+        {mines.map((_, i) => {
+          return (
+            <React.Fragment key={i}>
+              {_.map((c, j) => {
+                return (
+                  <Tile
+                    cij={{ c, i, j }}
+                    handleClick={handleClick}
+                    handleRightClick={handleRightClick}
+                    key={`${i},${j}`}
+                  />
+                );
+              })}
+            </React.Fragment>
+          );
+        })}
       </div>
     </div>
   );

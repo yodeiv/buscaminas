@@ -4,7 +4,7 @@ function matrix(dimention, startingCoor = [], numberOfMines = 10) {
     let rn = [];
     while (rn.length < numberOfMines) {
       let r = Math.floor(Math.random() * dimention[0] * dimention[1]);
-      if (rn.indexOf(r) === -1 && r !== startingCoor[0] * (numberOfMines - 1) + startingCoor[1]) rn.push(r);
+      if (rn.indexOf(r) === -1 && r !== startingCoor[0] * dimention[1] + startingCoor[1]) rn.push(r);
     }
     return rn;
   })();
