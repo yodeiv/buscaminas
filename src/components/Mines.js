@@ -3,6 +3,8 @@ import Tile from "./Tile";
 import matrix from "./utils";
 import CounterFlags from "./CounterFlags";
 import Counter from "./Counter";
+import StyledGrid from "../styledComponents/StyledGrid";
+
 function Mines() {
   //initial object passed to "setting" correspond to beginner level
   const [setting, setSetting] = useState({ dimension: [9, 9], startingCoor: [], numberOfMines: 10 });
@@ -152,7 +154,7 @@ function Mines() {
           height: cover,
         }}
       ></div>
-      <div className="grid-container">
+      <StyledGrid columns={setting.dimension[1]}>
         {mines.map((_, i) => {
           return (
             <React.Fragment key={i}>
@@ -169,7 +171,7 @@ function Mines() {
             </React.Fragment>
           );
         })}
-      </div>
+      </StyledGrid>
     </div>
   );
 }
