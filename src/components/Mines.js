@@ -3,11 +3,13 @@ import Tile from "./Tile";
 import matrix from "./utils";
 import CounterFlags from "./CounterFlags";
 import Counter from "./Counter";
+import Options from "./Options";
 import StyledGrid from "../styledComponents/StyledGrid";
+import StyledCover from "../styledComponents/StyledCover";
 
 function Mines() {
   //initial object passed to "setting" correspond to beginner level
-  const [setting, setSetting] = useState({ dimension: [9, 9], startingCoor: [], numberOfMines: 10 });
+  const [setting, setSetting] = useState({ dimension: [8, 8], startingCoor: [], numberOfMines: 4 });
   const clickCounter = useRef(new Set());
   const [mines, setMines] = useState(
     Array.from(Array(setting.dimension[0]), () => {
@@ -16,22 +18,23 @@ function Mines() {
   );
 
   const obj = useRef();
-  const [cover, setCover] = useState("0px");
   const [win, setWin] = useState("face_neutral");
   const [countFlags, setCountFlags] = useState(new Set());
   const [startCounter, setStartCounter] = useState(0);
 
   const handleReset = () => {
-    //Do not reset if the game hasn't been started
+    //If condition for not resetting if the game hasn't been started
     if (clickCounter.current.size === 0 && countFlags.size === 0) return;
+    reset(setting.dimension);
+  };
 
-    //obj.current = matrix();
+  const reset = (d) => {
+    //This function is used twice
     setMines(
-      Array.from(Array(setting.dimension[0]), () => {
-        return new Array(setting.dimension[1]).fill("");
+      Array.from(Array(d[0]), () => {
+        return new Array(d[1]).fill("");
       })
     );
-    setCover("0px");
     setWin("face_neutral");
     setCountFlags((prev) => {
       prev.clear();
@@ -117,7 +120,6 @@ function Mines() {
       //If the click is on a mine
     } else {
       setStartCounter("paused");
-      setCover("225px");
       setWin("face_lose");
       setMines((prev) => {
         obj.current.coordinatesBombs.forEach((item) => {
@@ -138,40 +140,38 @@ function Mines() {
     }
   };
 
+  const changeDificulty = (o) => {
+    setSetting(o);
+    reset(o.dimension);
+  };
+
   return (
     <div>
+      <Options changeDificulty={changeDificulty} />
       <CounterFlags numberFlags={setting.numberOfMines - countFlags.size} />
-      <div
-        onClick={handleReset}
-        className={`${win} face`}
-        style={{ width: "50px", height: "50px", margin: "auto" }}
-      ></div>
+      <div onClick={handleReset} className={`${win} face`}></div>
       <Counter start={startCounter} />
-      <div
-        className="cover"
-        style={{
-          width: cover,
-          height: cover,
-        }}
-      ></div>
-      <StyledGrid columns={setting.dimension[1]}>
-        {mines.map((_, i) => {
-          return (
-            <React.Fragment key={i}>
-              {_.map((c, j) => {
-                return (
-                  <Tile
-                    cij={{ c, i, j }}
-                    handleClick={handleClick}
-                    handleRightClick={handleRightClick}
-                    key={`${i},${j}`}
-                  />
-                );
-              })}
-            </React.Fragment>
-          );
-        })}
-      </StyledGrid>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <StyledCover win={win} dimension={setting.dimension} />
+        <StyledGrid columns={setting.dimension[1]}>
+          {mines.map((_, i) => {
+            return (
+              <React.Fragment key={i}>
+                {_.map((c, j) => {
+                  return (
+                    <Tile
+                      cij={{ c, i, j }}
+                      handleClick={handleClick}
+                      handleRightClick={handleRightClick}
+                      key={`${i},${j}`}
+                    />
+                  );
+                })}
+              </React.Fragment>
+            );
+          })}
+        </StyledGrid>
+      </div>
     </div>
   );
 }
