@@ -3,7 +3,7 @@ import { formatNumber } from "./utils";
 /* import BackgroundImage from "../images/d4.jpg"; */
 function CounterFlags({ numberFlags }) {
   return (
-    <div>
+    <div style={{ display: "flex", backgroundColor: "black" }}>
       {/* <div
         style={{
           backgroundImage: `url(${BackgroundImage})`,

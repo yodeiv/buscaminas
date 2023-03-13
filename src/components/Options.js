@@ -61,7 +61,7 @@ function Options({ changeDificulty }) {
   return (
     <div>
       <button onClick={handleClick}>Dificulty</button>
-      <div>
+      <b>
         {(() => {
           switch (radioCheck.indexOf(true)) {
             case 0:
@@ -76,146 +76,144 @@ function Options({ changeDificulty }) {
               return;
           }
         })()}
-      </div>
+      </b>
       {!hide ? (
-        <div>
-          <table className="table">
-            <tbody>
-              <tr className="header">
-                <th style={{ paddingLeft: "6px", textAlign: "left" }}>Dificulty</th>
-                <td colSpan="3" style={{ padding: "3px", textAlign: "right" }}>
-                  <span title="Close" className="close-dialog" onClick={() => setHide(true)}>
-                    ×
-                  </span>
-                </td>
-              </tr>
-              <tr className="dimensions">
-                <td></td>
-                <td>Height</td>
-                <td>Width</td>
-                <td>Mines</td>
-              </tr>
+        <table className="table">
+          <tbody>
+            <tr className="header">
+              <th style={{ paddingLeft: "6px", textAlign: "left" }}>Dificulty</th>
+              <td colSpan="3" style={{ padding: "3px", textAlign: "right" }}>
+                <span title="Close" className="close-dialog" onClick={() => setHide(true)}>
+                  ×
+                </span>
+              </td>
+            </tr>
+            <tr className="dimensions">
+              <td></td>
+              <td>Height</td>
+              <td>Width</td>
+              <td>Mines</td>
+            </tr>
 
-              <tr>
-                <th align="left">
-                  <label>
-                    <input
-                      type="radio"
-                      name="option"
-                      value="Beginner"
-                      onChange={(e) => setValue(e.target.value)}
-                      defaultChecked={radioCheck[0]}
-                    />
-                    Beginner
-                  </label>
-                </th>
-                <td>9</td>
-                <td>9</td>
-                <td>10</td>
-              </tr>
-              <tr>
-                <th align="left">
-                  <label>
-                    <input
-                      type="radio"
-                      name="option"
-                      value="Intermediate"
-                      onChange={(e) => setValue(e.target.value)}
-                      defaultChecked={radioCheck[1]}
-                    />
-                    Intermediate
-                  </label>
-                </th>
-                <td>16</td>
-                <td>16</td>
-                <td>40</td>
-              </tr>
+            <tr>
+              <th align="left">
+                <label>
+                  <input
+                    type="radio"
+                    name="option"
+                    value="Beginner"
+                    onChange={(e) => setValue(e.target.value)}
+                    defaultChecked={radioCheck[0]}
+                  />
+                  Beginner
+                </label>
+              </th>
+              <td>9</td>
+              <td>9</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <th align="left">
+                <label>
+                  <input
+                    type="radio"
+                    name="option"
+                    value="Intermediate"
+                    onChange={(e) => setValue(e.target.value)}
+                    defaultChecked={radioCheck[1]}
+                  />
+                  Intermediate
+                </label>
+              </th>
+              <td>16</td>
+              <td>16</td>
+              <td>40</td>
+            </tr>
 
-              <tr>
-                <th align="left">
-                  <label>
-                    <input
-                      type="radio"
-                      name="option"
-                      value="Expert"
-                      onChange={(e) => setValue(e.target.value)}
-                      defaultChecked={radioCheck[2]}
-                    />
-                    Expert
-                  </label>
-                </th>
-                <td>16</td>
-                <td>30</td>
-                <td>99</td>
-              </tr>
-              <tr>
-                <th align="left">
-                  <label>
-                    <input
-                      type="radio"
-                      name="option"
-                      value="Custom"
-                      onChange={(e) => {
-                        setValue(e.target.value);
-                        setTimeout(() => {
-                          inputRef.current.focus();
-                        }, 0);
-                      }}
-                      defaultChecked={radioCheck[3]}
-                    />
-                    Custom
-                  </label>
-                </th>
-                <td>
+            <tr>
+              <th align="left">
+                <label>
                   <input
-                    type="number"
-                    ref={inputRef}
-                    min={2}
-                    max={80}
-                    value={height}
-                    onChange={(e) => setHeight(e.target.value)}
-                    onBlur={(e) => {
-                      handleValidation(e, setHeight);
-                    }}
-                    disabled={value === "Custom" ? false : true}
+                    type="radio"
+                    name="option"
+                    value="Expert"
+                    onChange={(e) => setValue(e.target.value)}
+                    defaultChecked={radioCheck[2]}
                   />
-                </td>
-                <td>
+                  Expert
+                </label>
+              </th>
+              <td>16</td>
+              <td>30</td>
+              <td>99</td>
+            </tr>
+            <tr>
+              <th align="left">
+                <label>
                   <input
-                    type="number"
-                    min={2}
-                    max={80}
-                    value={width}
-                    onChange={(e) => setWidth(e.target.value)}
-                    onBlur={(e) => {
-                      handleValidation(e, setWidth);
+                    type="radio"
+                    name="option"
+                    value="Custom"
+                    onChange={(e) => {
+                      setValue(e.target.value);
+                      setTimeout(() => {
+                        inputRef.current.focus();
+                      }, 0);
                     }}
-                    disabled={value === "Custom" ? false : true}
+                    defaultChecked={radioCheck[3]}
                   />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    min={1}
-                    max={height * width - 2}
-                    value={mines}
-                    onChange={(e) => setMines(e.target.value)}
-                    onBlur={(e) => {
-                      handleValidation(e, setMines);
-                    }}
-                    disabled={value === "Custom" ? false : true}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td colSpan={4}>
-                  <button onClick={handleDificulty}>New game</button>
-                  <button onClick={() => setHide(true)}>Cancel</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                  Custom
+                </label>
+              </th>
+              <td>
+                <input
+                  type="number"
+                  ref={inputRef}
+                  min={2}
+                  max={80}
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  onBlur={(e) => {
+                    handleValidation(e, setHeight);
+                  }}
+                  disabled={value === "Custom" ? false : true}
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  min={2}
+                  max={80}
+                  value={width}
+                  onChange={(e) => setWidth(e.target.value)}
+                  onBlur={(e) => {
+                    handleValidation(e, setWidth);
+                  }}
+                  disabled={value === "Custom" ? false : true}
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  min={1}
+                  max={height * width - 2}
+                  value={mines}
+                  onChange={(e) => setMines(e.target.value)}
+                  onBlur={(e) => {
+                    mines > 999 ? setMines(999) : handleValidation(e, setMines);
+                  }}
+                  disabled={value === "Custom" ? false : true}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td colSpan={4}>
+                <button onClick={handleDificulty}>New game</button>
+                <button onClick={() => setHide(true)}>Cancel</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       ) : null}
     </div>
   );

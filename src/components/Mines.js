@@ -6,12 +6,13 @@ import Counter from "./Counter";
 import Options from "./Options";
 import StyledGrid from "../styledComponents/StyledGrid";
 import StyledCover from "../styledComponents/StyledCover";
+import StyledHeader from "../styledComponents/StyledHeader";
 
 function Mines() {
   //initial object passed to "setting" correspond to beginner level
-  const [setting, setSetting] = useState({ dimension: [8, 8], startingCoor: [], numberOfMines: 4 });
+  const [setting, setSetting] = useState({ dimension: [9, 9], startingCoor: [], numberOfMines: 10 });
   const clickCounter = useRef(new Set());
-  const [mines, setMines] = useState(
+  const [board, setBoard] = useState(
     Array.from(Array(setting.dimension[0]), () => {
       return new Array(setting.dimension[1]).fill("");
     })
@@ -30,7 +31,7 @@ function Mines() {
 
   const reset = (d) => {
     //This function is used twice
-    setMines(
+    setBoard(
       Array.from(Array(d[0]), () => {
         return new Array(d[1]).fill("");
       })
@@ -49,7 +50,7 @@ function Mines() {
     setCountFlags(new Set(Array.from(Array(setting.numberOfMines).keys())));
     setStartCounter("paused");
     setWin("face_win");
-    setMines((prev) => {
+    setBoard((prev) => {
       obj.current.coordinatesBombs.forEach((item) => {
         prev[item.i][item.j] = "f";
       });
@@ -60,22 +61,23 @@ function Mines() {
   const handleRightClick = (e) => {
     e.preventDefault();
     const v = e.target.id.split(",").map((z) => parseInt(z));
-    if (e.target.className === "closed tile") {
-      setMines((prev) => {
-        prev[v[0]][v[1]] = "f";
-        return [...prev];
-      });
-      setCountFlags((prev) => {
-        prev.add(e.target.id);
-        return prev;
-      });
-    } else {
-      setMines((prev) => {
+    if (board[v[0]][v[1]] === "f") {
+      setBoard((prev) => {
         prev[v[0]][v[1]] = "";
         return [...prev];
       });
       setCountFlags((prev) => {
         prev.delete(e.target.id);
+        return prev;
+      });
+    } else {
+      setBoard((prev) => {
+        prev[v[0]][v[1]] = "f";
+        return [...prev];
+      });
+
+      setCountFlags((prev) => {
+        prev.add(e.target.id);
         return prev;
       });
     }
@@ -102,7 +104,7 @@ function Mines() {
         });
         return prev;
       });
-      setMines((prev) => {
+      setBoard((prev) => {
         t.forEach((item) => {
           prev[item.i][item.j] = obj.current.mainMatrix[item.i][item.j].toString();
         });
@@ -110,7 +112,7 @@ function Mines() {
       });
       //If the click is on an number
     } else if (obj.current.mainMatrix[v[0]][v[1]] >= 1) {
-      setMines((prev) => {
+      setBoard((prev) => {
         prev[v[0]][v[1]] = obj.current.mainMatrix[v[0]][v[1]].toString();
         return [...prev];
       });
@@ -121,7 +123,7 @@ function Mines() {
     } else {
       setStartCounter("paused");
       setWin("face_lose");
-      setMines((prev) => {
+      setBoard((prev) => {
         obj.current.coordinatesBombs.forEach((item) => {
           if (prev[item.i][item.j] !== "f") prev[item.i][item.j] = "b";
         });
@@ -148,30 +150,31 @@ function Mines() {
   return (
     <div>
       <Options changeDificulty={changeDificulty} />
-      <CounterFlags numberFlags={setting.numberOfMines - countFlags.size} />
-      <div onClick={handleReset} className={`${win} face`}></div>
-      <Counter start={startCounter} />
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <StyledCover win={win} dimension={setting.dimension} />
-        <StyledGrid columns={setting.dimension[1]}>
-          {mines.map((_, i) => {
-            return (
-              <React.Fragment key={i}>
-                {_.map((c, j) => {
-                  return (
-                    <Tile
-                      cij={{ c, i, j }}
-                      handleClick={handleClick}
-                      handleRightClick={handleRightClick}
-                      key={`${i},${j}`}
-                    />
-                  );
-                })}
-              </React.Fragment>
-            );
-          })}
-        </StyledGrid>
-      </div>
+      <StyledHeader size={setting.dimension[1]}>
+        <CounterFlags numberFlags={setting.numberOfMines - countFlags.size} />
+        <div onClick={handleReset} className={`${win} face`}></div>
+        <Counter start={startCounter} />
+      </StyledHeader>
+
+      <StyledCover win={win} dimension={setting.dimension} />
+      <StyledGrid columns={setting.dimension[1]}>
+        {board.map((_, i) => {
+          return (
+            <React.Fragment key={i}>
+              {_.map((c, j) => {
+                return (
+                  <Tile
+                    cij={{ c, i, j }}
+                    handleClick={handleClick}
+                    handleRightClick={handleRightClick}
+                    key={`${i},${j}`}
+                  />
+                );
+              })}
+            </React.Fragment>
+          );
+        })}
+      </StyledGrid>
     </div>
   );
 }

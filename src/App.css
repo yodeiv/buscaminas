@@ -45,11 +45,10 @@
 }
 /*Face button*/
 .face {
-  background-size: 50px 50px;
+  background-size: 47px 47px;
   background-repeat: no-repeat;
-  width: 50px;
-  height: 50px;
-  margin: auto;
+  width: 47px;
+  height: 47px;
 }
 
 .face_neutral {
@@ -75,9 +74,10 @@
 .digit {
   display: inline-block;
   background-repeat: no-repeat;
-  background-size: 20px 30px;
-  width: 20px;
-  height: 30px;
+  background-size: 22px 47px;
+  width: 22px;
+  height: 47px;
+  margin: 0 1px;
 }
 .d0 {
   background-image: url("../src/images/d0.svg");
@@ -117,7 +117,11 @@
   border-collapse: collapse;
   background-color: white;
   position: absolute;
+  margin: 0 auto;
   border: 2px solid brown;
+  z-index: 2;
+  left: 0;
+  right: 0;
 }
 
 th,
@@ -154,6 +158,6 @@ th {
   line-height: 16px;
   cursor: pointer;
 }
-td button {
-  margin: 5px 20px;
+button {
+  margin: 2px 20px;
 }

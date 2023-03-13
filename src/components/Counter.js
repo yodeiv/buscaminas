@@ -24,7 +24,7 @@ function Counter({ start }) {
   }, [time, start]);
 
   return (
-    <div>
+    <div style={{ display: "flex", backgroundColor: "black" }}>
       {formatNumber(time).map((item, index) => {
         return <div className={`d${item} digit`} key={index}></div>;
       })}
